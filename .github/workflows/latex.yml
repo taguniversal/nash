@@ -1,0 +1,44 @@
+name: Build LaTeX Documentation
+
+on:
+  push:
+    paths:
+      - 'docs/**'
+      - '.github/workflows/latex.yml'
+  pull_request:
+    paths:
+      - 'docs/**'
+      - '.github/workflows/latex.yml'
+
+jobs:
+  build_latex:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Compile LaTeX document
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: docs/document.tex
+          working_directory: docs
+          args: -pdf -file-line-error -halt-on-error -interaction=nonstopmode
+
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: nash-documentation
+          path: docs/document.pdf
+          if-no-files-found: error
+
+      - name: Create Release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: docs/document.pdf
+          tag_name: doc-${{ github.sha }}
+          name: Documentation Build ${{ github.sha }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

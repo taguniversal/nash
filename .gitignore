@@ -1,7 +1,25 @@
-.DS_Store
+
+
+# LaTeX temporary files
 *.aux
-*.fdb_latexmk
-*.fls
 *.log
-*.pdf
+*.out
 *.synctex.gz
+*.fls
+*.fdb_latexmk
+
+# Build directory
+build/
+
+# PDF files (uncomment if you don't want to track PDFs)
+# *.pdf
+
+# Editor temporary files
+.vscode/
+.idea/
+*.swp
+*~
+
+# OS-specific files
+.DS_Store
+Thumbs.db
